@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.2/weblogic-web-app.xsd">
+
+	<container-descriptor>
+		<prefer-web-inf-classes>false</prefer-web-inf-classes>
+		<prefer-application-packages>			
+			<package-name>javax.xml.ws.*</package-name>
+			<package-name>javax.xml.bind.*</package-name>
+			<package-name>com.sun.*</package-name>
+			<package-name>com.ctc.wstx.*</package-name>			
+		</prefer-application-packages>
+		<prefer-application-resources>
+		    <resource-name>META-INF/services/javax.xml.ws.spi.Provider</resource-name>			
+		</prefer-application-resources>
+		<show-archived-real-path-enabled>true</show-archived-real-path-enabled>
+	</container-descriptor>
+	<context-root>ssrs-client-back</context-root>
+</weblogic-web-app>

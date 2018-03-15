@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="yan0kom/ssrs-client-back/ssrs-config" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:schemaLocation="yan0kom/ssrs-client-back/ssrs-config ssrs-config.xsd">
+
+	<!-- first server becomes default and returned by SsrsConfig.getDefaultServer() -->
+	<server>
+		<name>dev</name>
+		<location>http://localhost/ReportServer_SQL2014</location>
+		<user>developer</user>
+		<domain>MYPC</domain>
+		<password>developer</password>
+	</server>
+
+	<server>
+		<name>test</name>
+		<location>http://localhost/ReportServer_SQL2016</location>
+		<user>tester</user>
+		<domain>MYPC</domain>
+		<password>tester</password>		
+	</server>
+</config>

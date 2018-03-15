@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="yan0kom/ssrs-client-back/ssrs-config" 
+		xmlns:tns="yan0kom/ssrs-client-back/ssrs-config" 
+		elementFormDefault="qualified">
+
+    <complexType name="ServerType">
+    	<sequence>
+    		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="location" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="user" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="domain" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="password" type="string" maxOccurs="1" minOccurs="1"></element>    		
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="ConfigType">
+    	<sequence>
+    		<element name="server" type="tns:ServerType"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <element name="config" type="tns:ConfigType"></element>
+</schema>
