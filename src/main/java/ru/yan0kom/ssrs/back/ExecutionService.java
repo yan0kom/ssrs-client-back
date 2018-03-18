@@ -1,13 +1,19 @@
 package ru.yan0kom.ssrs.back;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.sqlserver.ReportExecution2005.ExecutionInfo;
@@ -25,7 +31,8 @@ import ru.yan0kom.ssrs.back.dis.XmlDis;
  * wrapper for SSRS ReportExecution2005 service
  */
 public class ExecutionService extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
+	private static final Pattern reportLinkPattern = Pattern.compile("href\\=\"replink\\=([^?]+)\\?([^&]+)([^\"]+)\"");
 	
     public ExecutionService() {
         super();
@@ -108,6 +115,7 @@ public class ExecutionService extends HttpServlet {
 			RenderFormat format = RenderFormat.valueOf(request.getParameter("format"));
 			String attachment = request.getParameter("attachment"); //optional, set Content-Disposition
 			String filename = request.getParameter("filename"); //optional
+			Boolean noRepLink = Boolean.valueOf(request.getParameter("noRepLink")); //optional
 			
 			//this url will be appended by image id
 			StringBuilder imageUrl = new StringBuilder(getServletContext().getContextPath());
@@ -133,7 +141,7 @@ public class ExecutionService extends HttpServlet {
 					html.setHtmlFragment(true);
 					html.setUserAgent(request.getHeader("User-Agent"));
 					html.setStreamRoot(imageUrl.toString());
-					html.setReplacementRoot("/link");
+					html.setReplacementRoot("replink=");
 					deviceInfo = html;
 					break;
 				case IMAGE:
@@ -171,7 +179,26 @@ public class ExecutionService extends HttpServlet {
 				}
 				response.addHeader("Content-Disposition", String.format("attachment; filename=%s.%s", filename, format.getExtension()));
 			}
-			response.getOutputStream().write(result.getResult());
+			
+			if (noRepLink) {
+				response.getOutputStream().write(result.getResult());
+			}else {
+				int divPos = 0;
+				String div = new String(result.getResult(), SsrsEncoding.toJava(result.getEncoding()));
+				PrintWriter out = response.getWriter();
+				Matcher m = reportLinkPattern.matcher(div);
+				while (m.find()) {
+					out.append(div.substring(divPos, m.start(0)));
+					out.append("href=\"javascript:ReportViewer.openReportLink('");
+					out.append(URLDecoder.decode(m.group(2), "UTF-8"));
+					out.append("', '");
+					out.append(URLDecoder.decode(m.group(3), "UTF-8").replaceAll("&amp;amp;", "&").substring(1));
+					out.append("');\"");
+					divPos = m.end(0);
+				}
+				out.append(div.substring(divPos, div.length()));
+			}
+			
 			response.flushBuffer();
 		} catch (Exception e) {			
 			writeException(response, e);
