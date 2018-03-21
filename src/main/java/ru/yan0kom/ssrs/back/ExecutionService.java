@@ -172,7 +172,9 @@ public class ExecutionService extends HttpServlet {
 			
 			RenderResponse result = SsrsConfig.getInstance().getDefaultServer().renderReport(executionId, format, deviceInfo);			
 			response.setContentType(result.getMimeType());
-			response.setCharacterEncoding(SsrsEncoding.toJava(result.getEncoding()));
+			if (format == RenderFormat.HTML40 || format == RenderFormat.HTML5 || format == RenderFormat.CSV || format == RenderFormat.XML) {
+				response.setCharacterEncoding(SsrsEncoding.toJava(result.getEncoding()));
+			}
 			if (attachment != null) {
 				if (filename == null) {
 					filename = report.replaceAll("/", "_");
@@ -180,9 +182,7 @@ public class ExecutionService extends HttpServlet {
 				response.addHeader("Content-Disposition", String.format("attachment; filename=%s.%s", filename, format.getExtension()));
 			}
 			
-			if (noRepLink) {
-				response.getOutputStream().write(result.getResult());
-			}else {
+			if ((format == RenderFormat.HTML40 || format == RenderFormat.HTML5) && !noRepLink) {			
 				int divPos = 0;
 				String div = new String(result.getResult(), SsrsEncoding.toJava(result.getEncoding()));
 				PrintWriter out = response.getWriter();
@@ -197,6 +197,8 @@ public class ExecutionService extends HttpServlet {
 					divPos = m.end(0);
 				}
 				out.append(div.substring(divPos, div.length()));
+			}else {
+				response.getOutputStream().write(result.getResult());
 			}
 			
 			response.flushBuffer();
