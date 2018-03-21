@@ -10,62 +10,62 @@
 
 	<dependencies>
 		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>4.4</version>
-		    <scope>test</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
 		</dependency>
-	
+
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <version>4.0.0</version>
-		    <scope>provided</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
 		<dependency>
-		    <groupId>javax.xml.ws</groupId>
-		    <artifactId>jaxws-api</artifactId>
-		    <version>2.2.12</version>
+			<groupId>javax.xml.ws</groupId>
+			<artifactId>jaxws-api</artifactId>
+			<version>2.2.12</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http -->
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-transports-http</artifactId>
-		    <version>3.0.16</version>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>3.0.16</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-hc -->
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-transports-http-hc</artifactId>
-		    <version>3.0.16</version>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http-hc</artifactId>
+			<version>3.0.16</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-frontend-jaxws -->
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-frontend-jaxws</artifactId>
-		    <version>3.0.16</version>
-		</dependency>		
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>3.0.16</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-ws-policy -->
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-ws-policy</artifactId>
-		    <version>3.0.16</version>
-		</dependency>		
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-ws-policy</artifactId>
+			<version>3.0.16</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>2.7.9.3</version>
-		</dependency>		
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.9.3</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.5.5</version>
-		</dependency>		
-	</dependencies>	
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.5</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -88,8 +88,58 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.0</version>
+	            <configuration>
+	                <webXml>${webXmlFile}</webXml>
+	            </configuration>				
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>prod</id>
+	        <properties>
+	            <webXmlFile>src/main/config/prod/web.xml</webXmlFile>
+	        </properties>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<exclude>*.sample</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/config/prod</directory>
+						<excludes>
+							<exclude>web.xml</exclude>
+						</excludes>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+	        <properties>
+	            <webXmlFile>src/main/config/dev/web.xml</webXmlFile>
+	        </properties>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<exclude>*.sample</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/config/dev</directory>
+						<excludes>
+							<exclude>web.xml</exclude>
+						</excludes>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
