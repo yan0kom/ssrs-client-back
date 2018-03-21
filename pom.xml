@@ -83,14 +83,29 @@
 				<version>3.0.2</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
+					<resources>
+						<resource>
+							<directory>src/main/resources</directory>
+							<excludes>
+								<exclude>*.sample</exclude>
+							</excludes>
+						</resource>
+						<resource>
+							<directory>${configDir}</directory>
+							<excludes>
+								<exclude>web.xml</exclude>
+							</excludes>
+						</resource>
+					</resources>
 				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.0</version>
-	            <configuration>
-	                <webXml>${webXmlFile}</webXml>
-	            </configuration>				
+				<configuration>
+					<webXml>${webXmlFile}</webXml>
+					<packagingExcludes>${warExcludes}</packagingExcludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -98,47 +113,18 @@
 	<profiles>
 		<profile>
 			<id>prod</id>
-	        <properties>
-	            <webXmlFile>src/main/config/prod/web.xml</webXmlFile>
-	        </properties>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-						<excludes>
-							<exclude>*.sample</exclude>
-						</excludes>
-					</resource>
-					<resource>
-						<directory>src/main/config/prod</directory>
-						<excludes>
-							<exclude>web.xml</exclude>
-						</excludes>
-					</resource>
-				</resources>
-			</build>
+			<properties>
+				<configDir>src/main/config/prod</configDir>
+				<webXmlFile>src/main/config/prod/web.xml</webXmlFile>
+				<warExcludes>index.jsp</warExcludes>
+			</properties>
 		</profile>
 		<profile>
 			<id>dev</id>
-	        <properties>
-	            <webXmlFile>src/main/config/dev/web.xml</webXmlFile>
-	        </properties>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-						<excludes>
-							<exclude>*.sample</exclude>
-						</excludes>
-					</resource>
-					<resource>
-						<directory>src/main/config/dev</directory>
-						<excludes>
-							<exclude>web.xml</exclude>
-						</excludes>
-					</resource>
-				</resources>
-			</build>
+			<properties>
+				<configDir>src/main/config/dev</configDir>
+				<webXmlFile>src/main/config/dev/web.xml</webXmlFile>
+			</properties>
 		</profile>
 	</profiles>
 
