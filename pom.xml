@@ -105,6 +105,7 @@
 				<configuration>
 					<webXml>${webXmlFile}</webXml>
 					<packagingExcludes>${warExcludes}</packagingExcludes>
+					<warSourceExcludes>WEB-INF/classes/**</warSourceExcludes>
 				</configuration>
 			</plugin>
 		</plugins>
